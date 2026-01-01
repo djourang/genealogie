@@ -1,0 +1,372 @@
+[
+  {
+    "id": "p_moursal",
+    "nom": "MOURSAL",
+    "nomPere": "OURBO",
+    "nomGrandPere": "TARGUI",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": null,
+    "mereId": "p_guisma"
+  },
+  {
+    "id": "p_ourbo",
+    "nom": "OURBO",
+    "nomPere": null,
+    "nomGrandPere": null,
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": null,
+    "mereId": null
+  },
+  {
+    "id": "p_targui",
+    "nom": "TARGUI",
+    "nomPere": null,
+    "nomGrandPere": null,
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": null,
+    "mereId": null
+  },
+
+  {
+    "id": "p_guisma",
+    "nom": "GUISMA",
+    "nomPere": "ISSAKHA",
+    "nomGrandPere": "BAHAT",
+    "sexe": "f",
+    "clan": "ERDIER",
+    "pereId": null,
+    "mereId": null
+  },
+
+  {
+    "id": "p_haran",
+    "nom": "HARAN",
+    "nomPere": "MOURNO",
+    "nomGrandPere": "MOURSAL",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_mourno",
+    "mereId": null
+  },
+  {
+    "id": "p_mourno",
+    "nom": "MOURNO",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_toma"
+  },
+
+  {
+    "id": "p_baskouni",
+    "nom": "BASKOUNI",
+    "nomPere": "INAY",
+    "nomGrandPere": null,
+    "sexe": "f",
+    "clan": "ORORA",
+    "pereId": null,
+    "mereId": null
+  },
+
+  {
+    "id": "p_sebi",
+    "nom": "SEBI",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_baskouni"
+  },
+  {
+    "id": "p_eri",
+    "nom": "ERI",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "f",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_baskouni"
+  },
+  {
+    "id": "p_gardia",
+    "nom": "GARDIA",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_baskouni"
+  },
+  {
+    "id": "p_daoud",
+    "nom": "DAOUD",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_baskouni"
+  },
+  {
+    "id": "p_issa",
+    "nom": "ISSA",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_baskouni"
+  },
+  {
+    "id": "p_boki",
+    "nom": "BOKI",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_baskouni",
+    "jumeauId": "p_hatouma"
+  },
+  {
+    "id": "p_hatouma",
+    "nom": "HATOUMA",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "f",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_baskouni",
+    "jumeauId": "p_boki"
+  },
+  {
+    "id": "p_tahir",
+    "nom": "TAHIR",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_baskouni"
+  },
+
+  {
+    "id": "p_toma",
+    "nom": "TOMA",
+    "nomPere": "DICKO",
+    "nomGrandPere": "ANOU",
+    "sexe": "f",
+    "clan": "NANA",
+    "pereId": null,
+    "mereId": null
+  },
+
+  {
+    "id": "p_hieni",
+    "nom": "HIENI",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "f",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_toma"
+  },
+  {
+    "id": "p_bokhit",
+    "nom": "BOKHIT",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_toma"
+  },
+  {
+    "id": "p_sabie",
+    "nom": "SABIE",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "f",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_toma"
+  },
+  {
+    "id": "p_hardje",
+    "nom": "HARDJE",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "f",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_toma"
+  },
+  {
+    "id": "p_sougour",
+    "nom": "SOUGOUR",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_toma"
+  },
+
+  {
+    "id": "p_menougo",
+    "nom": "MENOUGO",
+    "nomPere": "BOUYENEOU",
+    "nomGrandPere": "SOUGAR",
+    "sexe": "f",
+    "clan": "SIGUERA",
+    "pereId": null,
+    "mereId": null
+  },
+
+  {
+    "id": "p_hatne",
+    "nom": "HATNE",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "f",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_menougo"
+  },
+  {
+    "id": "p_tombo",
+    "nom": "TOMBO",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "f",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_menougo"
+  },
+  {
+    "id": "p_hamit",
+    "nom": "HAMIT",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_menougo"
+  },
+  {
+    "id": "p_amne",
+    "nom": "AMNE",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "f",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_menougo"
+  },
+  {
+    "id": "p_idriss",
+    "nom": "IDRISS",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_menougo"
+  },
+  {
+    "id": "p_tichero",
+    "nom": "TICHERO",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "m",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_menougo"
+  },
+  {
+    "id": "p_hadimi",
+    "nom": "HADIMI",
+    "nomPere": "MOURSAL",
+    "nomGrandPere": "OURBO",
+    "sexe": "f",
+    "clan": "MAMIA",
+    "pereId": "p_moursal",
+    "mereId": "p_menougo"
+  },
+  {
+    "id": "p_anou",
+    "nom": "ANOU",
+    "nomPere": null,
+    "nomGrandPere": null,
+    "sexe": "m",
+    "clan": "NANA",
+    "pereId": null,
+    "mereId": null
+  },
+  {
+    "id": "p_bahat",
+    "nom": "BAHAT",
+    "nomPere": null,
+    "nomGrandPere": null,
+    "sexe": "m",
+    "clan": "ERDIER",
+    "pereId": null,
+    "mereId": null
+  },
+  {
+    "id": "p_bouyeneou",
+    "nom": "BOUYENEOU",
+    "nomPere": "SOUGAR",
+    "nomGrandPere": null,
+    "sexe": "m",
+    "clan": "SIGUERA",
+    "pereId": "p_sougar",
+    "mereId": null
+  },
+  {
+    "id": "p_dicko",
+    "nom": "DICKO",
+    "nomPere": "ANOU",
+    "nomGrandPere": null,
+    "sexe": "m",
+    "clan": "NANA",
+    "pereId": "p_anou",
+    "mereId": null
+  },
+  {
+    "id": "p_inay",
+    "nom": "INAY",
+    "nomPere": null,
+    "nomGrandPere": null,
+    "sexe": "m",
+    "clan": "ORORA",
+    "pereId": null,
+    "mereId": null
+  },
+  {
+    "id": "p_issakha",
+    "nom": "ISSAKHA",
+    "nomPere": "BAHAT",
+    "nomGrandPere": null,
+    "sexe": "m",
+    "clan": "ERDIER",
+    "pereId": "p_bahat",
+    "mereId": null
+  },
+  {
+    "id": "p_sougar",
+    "nom": "SOUGAR",
+    "nomPere": null,
+    "nomGrandPere": null,
+    "sexe": "m",
+    "clan": "SIGUERA",
+    "pereId": null,
+    "mereId": null
+  }
+]
