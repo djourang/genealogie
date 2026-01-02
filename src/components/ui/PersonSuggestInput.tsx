@@ -23,7 +23,7 @@ type Match = {
 /* ─────────────────── Hook click extérieur ───────────────── */
 
 function useOutsideClick(
-  ref: React.RefObject<HTMLElement>,
+  ref: React.RefObject<HTMLElement | null>,
   onOutside: () => void
 ) {
   const onOutsideRef = useRef(onOutside);
