@@ -1,106 +1,86 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
-import RelationDiagram from "@/components/RelationDiagram";
-import { findKinPath, formatNomComplet, getPersonById } from "@/lib/genealogie";
+import React, { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import Container from "@/components/site/Container";
+import { Button, Card, LinkButton } from "@/components/ui/ui";
+import PersonSuggestInput from "@/components/ui/PersonSuggestInput";
+import { getPersonById } from "@/lib/genealogie";
 
 export default function RelationPage() {
-  const [a, setA] = useState("p_tahir");
-  const [b, setB] = useState("p_guisma");
+  const router = useRouter();
 
-  const pa = useMemo(() => getPersonById(a.trim()), [a]);
-  const pb = useMemo(() => getPersonById(b.trim()), [b]);
+  const [aLabel, setALabel] = useState("");
+  const [bLabel, setBLabel] = useState("");
 
-  const path = useMemo(() => {
-    const A = a.trim();
-    const B = b.trim();
-    if (!A || !B) return null;
-    return findKinPath(A, B);
-  }, [a, b]);
+  const [aId, setAId] = useState<string | null>(null);
+  const [bId, setBId] = useState<string | null>(null);
+
+  const pa = useMemo(() => (aId ? getPersonById(aId) : null), [aId]);
+  const pb = useMemo(() => (bId ? getPersonById(bId) : null), [bId]);
+
+  const ready = Boolean(pa && pb);
+
+  function afficher() {
+    if (!pa || !pb) return;
+
+    router.push(
+      `/relation/schema?aId=${encodeURIComponent(
+        pa.id
+      )}&bId=${encodeURIComponent(pb.id)}`
+    );
+  }
 
   return (
-    <main className="p-6 space-y-5">
-      <h1 className="text-2xl font-bold">Lien de parenté</h1>
-
-      <div className="p-4 border rounded-xl space-y-3 max-w-2xl">
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <label className="block text-sm font-medium">Personne A (ID)</label>
-            <input
-              className="w-full border rounded-lg px-3 py-2"
-              value={a}
-              onChange={(e) => setA(e.target.value)}
-            />
-            <div className="text-xs text-gray-600 mt-1">
-              {pa ? formatNomComplet(pa) : "ID inconnu"}
-            </div>
+    <main className="py-10">
+      <Container>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between gap-3">
+            <h1 className="text-2xl font-bold">Lien de parenté</h1>
+            <LinkButton href="/">Accueil</LinkButton>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium">Personne B (ID)</label>
-            <input
-              className="w-full border rounded-lg px-3 py-2"
-              value={b}
-              onChange={(e) => setB(e.target.value)}
-            />
-            <div className="text-xs text-gray-600 mt-1">
-              {pb ? formatNomComplet(pb) : "ID inconnu"}
+          <Card className="max-w-3xl mx-auto space-y-5">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <PersonSuggestInput
+                label="Personne A"
+                value={aLabel}
+                onChange={(v) => {
+                  setALabel(v);
+                  setAId(null);
+                }}
+                onPick={({ id, label }) => {
+                  setAId(id);
+                  setALabel(label);
+                }}
+                placeholder="Tape un nom…"
+                limit={10}
+              />
+
+              <PersonSuggestInput
+                label="Personne B"
+                value={bLabel}
+                onChange={(v) => {
+                  setBLabel(v);
+                  setBId(null);
+                }}
+                onPick={({ id, label }) => {
+                  setBId(id);
+                  setBLabel(label);
+                }}
+                placeholder="Tape un nom…"
+                limit={10}
+              />
             </div>
-          </div>
+
+            <div className="flex items-center justify-end">
+              <Button ready={ready} onClick={afficher}>
+                Afficher
+              </Button>
+            </div>
+          </Card>
         </div>
-
-        <div className="flex gap-3 text-sm">
-          {pa ? (
-            <Link className="underline" href={`/personne/${pa.id}`}>
-              Voir A en schéma
-            </Link>
-          ) : null}
-          {pb ? (
-            <Link className="underline" href={`/personne/${pb.id}`}>
-              Voir B en schéma
-            </Link>
-          ) : null}
-        </div>
-      </div>
-
-      {/* Schéma du chemin */}
-      {pa && pb ? (
-        <RelationDiagram aId={pa.id} bId={pb.id} />
-      ) : (
-        <div className="text-red-600">IDs invalides.</div>
-      )}
-
-      {/* Texte du chemin (optionnel) */}
-      <div className="p-4 border rounded-xl max-w-2xl space-y-2">
-        <div className="font-semibold">Détails</div>
-        {path === null ? (
-          <div className="text-red-600">Aucun chemin trouvé.</div>
-        ) : path?.length === 0 ? (
-          <div>Même personne.</div>
-        ) : (
-          <ol className="list-decimal pl-6 space-y-1">
-            {path?.map((s, i) => {
-              const from = getPersonById(s.fromId);
-              const to = getPersonById(s.toId);
-              const fromName = from ? formatNomComplet(from) : s.fromId;
-              const toName = to ? formatNomComplet(to) : s.toId;
-              const label =
-                s.type === "pere"
-                  ? "→ père"
-                  : s.type === "mere"
-                  ? "→ mère"
-                  : "→ enfant";
-              return (
-                <li key={i}>
-                  <span className="font-medium">{fromName}</span> {label}{" "}
-                  <span className="font-medium">{toName}</span>
-                </li>
-              );
-            })}
-          </ol>
-        )}
-      </div>
+      </Container>
     </main>
   );
 }

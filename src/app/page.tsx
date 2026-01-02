@@ -1,32 +1,40 @@
-import Link from "next/link";
+import Container from "@/components/site/Container";
+import { ActionCard, Notice } from "@/components/ui/ui";
 
 export default function Home() {
   return (
-    <main className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Généalogie</h1>
-      <p className="text-sm text-gray-600">Que veux-tu faire ?</p>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Link
-          href="/personne"
-          className="p-5 border rounded-xl hover:bg-gray-50 transition"
-        >
-          <div className="text-lg font-semibold">Voir une personne</div>
-          <div className="text-sm text-gray-600">
-            Afficher le schéma d’une personne
+    <main className="py-10">
+      <Container>
+        <div className="space-y-5">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-extrabold">Généalogie familiale</h1>
+            <p className="text-gray-600">
+              Rechercher une personne, visualiser son schéma, et comprendre les
+              liens de parenté (parents, enfants, unions, clans).
+            </p>
           </div>
-        </Link>
 
-        <Link
-          href="/relation"
-          className="p-5 border rounded-xl hover:bg-gray-50 transition"
-        >
-          <div className="text-lg font-semibold">Lien de parenté</div>
-          <div className="text-sm text-gray-600">
-            Trouver le lien entre deux personnes
+          <div className="grid gap-4 sm:grid-cols-2 pt-2">
+            <ActionCard
+              href="/personne"
+              title="Voir une personne"
+              description="Recherche (nom / père / grand-père), puis affichage du schéma."
+              example="Mourno Moursal"
+            />
+            <ActionCard
+              href="/relation"
+              title="Lien de parenté"
+              description="Trouver un chemin entre deux personnes (père / mère / enfant)."
+              example="mourno moursal et Hassan Digo Anou"
+            />
           </div>
-        </Link>
-      </div>
+
+          <Notice label="Astuce">
+            utilise les Noms des Persone suggerer apres vos premières lettre
+            d'etrée <span className="font-mono">“Personne introuvable”</span>.
+          </Notice>
+        </div>
+      </Container>
     </main>
   );
 }

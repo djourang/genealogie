@@ -1,5 +1,4 @@
 // src/lib/genealogie.ts
-
 import personnesData from "@/data/personnes.json";
 
 export type Sexe = "m" | "f";
@@ -25,6 +24,16 @@ export type Person = {
 
 const personnes: Person[] = personnesData as Person[];
 
+/** Normalisation robuste (minuscules, sans accents, espaces normalisés) */
+function norm(s?: string | null): string {
+  return (s ?? "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ");
+}
+
 /** Construit "NOM PERE GRANDPERE" en ignorant ce qui est manquant */
 export function formatNomComplet(
   p: Pick<Person, "nom" | "nomPere" | "nomGrandPere">
@@ -39,8 +48,52 @@ export function getAllPersons(): Person[] {
   return personnes;
 }
 
+/**
+ * Résout un identifiant "legacy" vers un identifiant réel du JSON.
+ *
+ * Supporte :
+ * - id exact du JSON : "issa_mamia_000012"
+ * - id avec/sans prefix "p_" (si jamais tu l'ajoutes plus tard)
+ * - ancien id : "p_issa" (on retrouve par nom = ISSA)
+ */
+export function resolvePersonId(inputId: string): string | undefined {
+  const raw = (inputId ?? "").trim();
+  if (!raw) return undefined;
+
+  // 1) match direct
+  if (personnes.some((p) => p.id === raw)) return raw;
+
+  // 2) compat prefix p_
+  if (raw.startsWith("p_")) {
+    const without = raw.slice(2);
+    if (personnes.some((p) => p.id === without)) return without;
+  } else {
+    const withp = `p_${raw}`;
+    if (personnes.some((p) => p.id === withp)) return withp;
+  }
+
+  // 3) legacy "p_nom" ou "nom" -> recherche par nom (unique dans ton dataset actuel)
+  const slug = raw.startsWith("p_") ? raw.slice(2) : raw;
+  const slugN = norm(slug);
+
+  const candidates = personnes.filter((p) => norm(p.nom) === slugN);
+
+  if (candidates.length === 1) return candidates[0].id;
+
+  // Si plusieurs homonymes : on prend celui avec l'ID le plus petit (stable)
+  if (candidates.length > 1) {
+    const sorted = candidates.slice().sort((a, b) => a.id.localeCompare(b.id));
+    return sorted[0].id;
+  }
+
+  return undefined;
+}
+
+/** Trouve une personne par id (tolère anciens formats) */
 export function getPersonById(id: string): Person | undefined {
-  return personnes.find((p) => p.id === id);
+  const resolved = resolvePersonId(id);
+  if (!resolved) return undefined;
+  return personnes.find((p) => p.id === resolved);
 }
 
 export function getFather(id: string): Person | undefined {
@@ -61,8 +114,10 @@ export function getParents(id: string): { pere?: Person; mere?: Person } {
 
 /** Tous les enfants d’une personne (en tant que père OU mère) */
 export function getChildrenOf(parentId: string): Person[] {
+  const pid = resolvePersonId(parentId) ?? parentId;
+
   return personnes
-    .filter((p) => p.pereId === parentId || p.mereId === parentId)
+    .filter((p) => p.pereId === pid || p.mereId === pid)
     .slice()
     .sort((a, b) => formatNomComplet(a).localeCompare(formatNomComplet(b)));
 }
@@ -73,7 +128,9 @@ export function getChildrenGroupedByMother(fatherId: string): Array<{
   mereId?: string | null;
   enfants: Person[];
 }> {
-  const enfantsDuPere = personnes.filter((p) => p.pereId === fatherId);
+  const fid = resolvePersonId(fatherId) ?? fatherId;
+
+  const enfantsDuPere = personnes.filter((p) => p.pereId === fid);
 
   // Groupe par mereId
   const map = new Map<string, Person[]>();
@@ -136,10 +193,11 @@ export type KinStep = {
 };
 
 export function findKinPath(fromId: string, toId: string): KinStep[] | null {
-  const start = fromId?.trim();
-  const goal = toId?.trim();
-  if (!start || !goal) return null;
-  if (start === goal) return [];
+  const startResolved = resolvePersonId(fromId?.trim());
+  const goalResolved = resolvePersonId(toId?.trim());
+
+  if (!startResolved || !goalResolved) return null;
+  if (startResolved === goalResolved) return [];
 
   function neighbors(id: string): Array<{ nid: string; step: KinStep }> {
     const p = getPersonById(id);
@@ -169,8 +227,8 @@ export function findKinPath(fromId: string, toId: string): KinStep[] | null {
   }
 
   // BFS (plus court chemin)
-  const queue: string[] = [start];
-  const visited = new Set<string>([start]);
+  const queue: string[] = [startResolved];
+  const visited = new Set<string>([startResolved]);
   const prev = new Map<string, { prevId: string; step: KinStep }>();
 
   while (queue.length) {
@@ -180,11 +238,11 @@ export function findKinPath(fromId: string, toId: string): KinStep[] | null {
       visited.add(nid);
       prev.set(nid, { prevId: cur, step });
 
-      if (nid === goal) {
+      if (nid === goalResolved) {
         const steps: KinStep[] = [];
-        let x = goal;
+        let x = goalResolved;
 
-        while (x !== start) {
+        while (x !== startResolved) {
           const item = prev.get(x);
           if (!item) break;
           steps.push(item.step);
@@ -201,19 +259,21 @@ export function findKinPath(fromId: string, toId: string): KinStep[] | null {
 
   return null;
 }
+
 export function getUnionsOf(personId: string): Array<{
   partner?: Person;
   partnerId?: string | null;
   enfants: Person[];
 }> {
-  const me = getPersonById(personId);
+  const resolvedMeId = resolvePersonId(personId) ?? personId;
+  const me = getPersonById(resolvedMeId);
   if (!me) return [];
 
   const isMale = me.sexe === "m";
 
   // Mes enfants (où je suis père si homme, mère si femme)
   const myKids = personnes.filter((p) =>
-    isMale ? p.pereId === personId : p.mereId === personId
+    isMale ? p.pereId === resolvedMeId : p.mereId === resolvedMeId
   );
 
   // Groupement par partenaire (mereId si homme, pereId si femme)
@@ -246,14 +306,6 @@ export function getUnionsOf(personId: string): Array<{
   });
 
   return unions;
-}
-function norm(s?: string | null): string {
-  return (s ?? "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ");
 }
 
 export type PersonQuery = {
