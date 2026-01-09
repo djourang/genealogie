@@ -117,11 +117,18 @@ export default function RelationPivotDiagram({
   const anchorA = getPersonById(childToA);
   const anchorB = getPersonById(childToB);
 
-  // chemins à dérouler
-  // pivot -> ... -> A
-  const idsToA = ids.slice(0, pivotIndex + 1).reverse();
-  // pivot -> ... -> B
-  const idsToB = ids.slice(pivotIndex);
+  // chemins bruts A -> ... -> pivot -> ... -> B
+  // ids = [A, ..., childToA, pivot, childToB, ..., B]
+
+  // côté A : pivot -> childToA -> ... -> A
+  const idsFromPivotToA = ids.slice(0, pivotIndex + 1).reverse();
+  // côté B : pivot -> childToB -> ... -> B
+  const idsFromPivotToB = ids.slice(pivotIndex);
+
+  // on retire pivot + l’ancre (childToA / childToB),
+  // car ils sont déjà affichés en haut (pivot) et en "anchor" (childToA/B)
+  const chainA = idsFromPivotToA.slice(2); // => [ ... , A ]
+  const chainB = idsFromPivotToB.slice(2); // => [ ... , B ]
 
   const nodeW = 260;
   const nodeH = 80;
@@ -140,11 +147,9 @@ export default function RelationPivotDiagram({
   const unionParentsY = parentsY + nodeH + 10;
   const unionParentsDotX = (fatherCenterX + motherCenterX) / 2;
 
-  const pivotX = unionParentsDotX - nodeW / 2;
-  const pivotY = unionParentsY + 55;
-
-  const coupleY = pivotY + nodeH + 90;
   const coupleGapX = 60;
+  const pivotX = unionParentsDotX - nodeW / 2;
+  const coupleY = unionParentsY + 55;
   const partnerX = pivotX + nodeW + coupleGapX;
 
   const pivotCenterX = pivotX + nodeW / 2;
@@ -165,7 +170,7 @@ export default function RelationPivotDiagram({
 
   const svgH = Math.max(
     1100,
-    chainStartY + Math.max(idsToA.length, idsToB.length) * chainGapY + 300
+    chainStartY + Math.max(chainA.length, chainB.length) * chainGapY + 300
   );
 
   return (
@@ -189,7 +194,7 @@ export default function RelationPivotDiagram({
           height={nodeH}
         />
 
-        {/* union parents -> pivot (copié logique FamilyDiagram) */}
+        {/* union parents -> (descente vers le couple pivot) */}
         <line
           x1={fatherCenterX}
           y1={parentsY + nodeH}
@@ -216,28 +221,11 @@ export default function RelationPivotDiagram({
           x1={unionParentsDotX}
           y1={unionParentsY}
           x2={unionParentsDotX}
-          y2={pivotY}
-          stroke="black"
-        />
-
-        {/* pivot */}
-        <PersonNode
-          x={pivotX}
-          y={pivotY}
-          person={pivot}
-          width={nodeW}
-          height={nodeH}
-        />
-
-        {/* ===== couple qui initie le lien ===== */}
-        <line
-          x1={pivotCenterX}
-          y1={pivotY + nodeH}
-          x2={pivotCenterX}
           y2={coupleY}
           stroke="black"
         />
 
+        {/* ===== couple qui initie le lien (pivot + partenaire) ===== */}
         <PersonNode
           x={pivotX}
           y={coupleY}
@@ -309,13 +297,14 @@ export default function RelationPivotDiagram({
         />
 
         {/* ===== dérouler vers A (colonne gauche) ===== */}
-        {idsToA.map((pid, i) => {
+        {chainA.map((pid, i) => {
           const p = getPersonById(pid);
           const x = leftAnchorX;
           const y = chainStartY + i * chainGapY;
           const cx = x + nodeW / 2;
 
           if (i === 0) {
+            // première personne après l’ancre : ligne depuis anchorA
             return (
               <g key={`A-${pid}-${i}`}>
                 <line
@@ -346,7 +335,7 @@ export default function RelationPivotDiagram({
         })}
 
         {/* ===== dérouler vers B (colonne droite) ===== */}
-        {idsToB.map((pid, i) => {
+        {chainB.map((pid, i) => {
           const p = getPersonById(pid);
           const x = rightAnchorX;
           const y = chainStartY + i * chainGapY;
